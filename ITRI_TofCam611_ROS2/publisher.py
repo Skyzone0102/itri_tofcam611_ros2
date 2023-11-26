@@ -5,6 +5,7 @@ import TOFcam611
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
+import re
 
 # #DBSCAN
 epsilon = 70
@@ -13,13 +14,13 @@ minSample = 7
 class TofCam611(Node):
     def __init__(self):
         super().__init__("TofCam611")
-        self.publisher_ = self.create_publisher(String, "topic", 10)
-        # camera connection
-        self.com = TOFcam611.SerialInterface("COM4")
-        self.tofCam = TOFcam611.Camera(self.com)
-        # set camera settings
-        self.camera.powerOn()
-        self.camera.setIntTime_us(500)  # integration time in µSeconds
+        # self.publisher_ = self.create_publisher(String, "topic", 10)
+        # # camera connection
+        # self.com = TOFcam611.SerialInterface("COM4")
+        # self.tofCam = TOFcam611.Camera(self.com)
+        # # set camera settings
+        # self.camera.powerOn()
+        # self.camera.setIntTime_us(500)  # integration time in µSeconds
 
     # def timer_callback(self):
     #     msg = String()
@@ -146,18 +147,24 @@ class TofCam611(Node):
 
         # callback function
         while True:
-            tof_distance = np.array(self.camera.getDistance())
-            print("TOF distance image:")
-            print(np.around(tof_distance, decimals=1))
+            # tof_distance = np.array(self.camera.getDistance())
+            tof_distance = np.load("data_64px_1hr.npz")
+            # print("TOF distance image:")
+            # print(np.around(tof_distance, decimals=1))
+            for k in tof_distance.files:
+                key = int(re.search(r"\d+", k).group())
+                reshaped_data = np.reshape(tof_distance[k], (1, 64))
+                print(self.planeDetection(reshaped_data[0]))
 
-            # reshape into
-            tof_distance_reshape = tof_distance.reshape(64,1)
+
+            # # reshape into
+            # tof_distance_reshape = tof_distance.reshape(64,1)
             
-            # kick out (16200) (too small)
-            tof_distance_reshape = tof_distance_reshape[tof_distance_reshape!=16200]
+            # # kick out (16200) (too small)
+            # tof_distance_reshape = tof_distance_reshape[tof_distance_reshape!=16200]
                 
-            # DBscan
-            tof_distance_reshape = self.planeDetection(tof_distance_reshape)
+            # # DBscan
+            # tof_distance_reshape = self.planeDetection(tof_distance_reshape)
 
             # # smooth the plane(Gaussian blur)----------------------------------------------------
             # filtered_array = self.filterArray(depth_array)
@@ -170,17 +177,16 @@ class TofCam611(Node):
             # warning = self.checkWarning(swap, check)
             # print (warning)
             # -----------------------------------------------------------
+            
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     publisher = TofCam611()
-    rclpy.spin(publisher)
+    publisher.run()
+    # rclpy.spin(publisher)
 
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
     publisher.destroy_node()
     rclpy.shutdown()
 

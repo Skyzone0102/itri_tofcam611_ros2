@@ -14,12 +14,13 @@ setup(
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='michael',
-    maintainer_email='michael@todo.todo',
+    maintainer_email='michaelchou0102@gmail.com',
     description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'read = ITRI_TofCam611_ROS2.publisher: main'
         ],
     },
 )
