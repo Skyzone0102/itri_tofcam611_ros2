@@ -28,7 +28,7 @@ class TofCam611(Node):
     #     self.publisher_.publish(msg)
     #     self.get_logger().info('Publishing: "%s"' % msg.data)
     #     self.i += 1
-    
+
     # def filterArray(self, array):
     #     #smooth by using gaussian filter
     #     sigma = sigmaG
@@ -38,13 +38,13 @@ class TofCam611(Node):
     def planeDetection(self, arr):
         clustering = DBSCAN(eps=epsilon, min_samples=minSample).fit(arr)
         return clustering.labels_
-    
+
     # def planeDepthDetection(self,label_array,depth_array):
     #     depth = []
     #     depth1 = [] #store the total depth and the number added
     #     depth2 = []
     #     depth3 = []
-        
+
     #     for i in range(7):
     #         for j in range(8):
     #             if label_array[i][j] == 0:
@@ -53,13 +53,13 @@ class TofCam611(Node):
     #                 depth2.append(depth_array[i][j])
     #             elif label_array[i][j] == 2:
     #                 depth3.append(depth_array[i][j])
-                        
+
     #     depth.append(depth1)
     #     depth.append(depth2)
     #     depth.append(depth3)
-        
-        
-    #     num = []         
+
+
+    #     num = []
     #     for i in range(3):
     #         temp_depth = 0
     #         num.append(len(depth[i]))
@@ -69,7 +69,7 @@ class TofCam611(Node):
     #             depth[i] = 0
     #         else:
     #             depth[i] = temp_depth / num[i]
-        
+
     #     before_depth = depth.copy()
     #     depth = [x for x in depth if x != 0]
     #     #sorting
@@ -78,7 +78,7 @@ class TofCam611(Node):
     #     #     if i < len(depth)-1:
     #     #         if(depth[i+1]-depth[i]) < 300:
     #     #             print("what the hell")
-            
+
 
     #     #comparison remapping
     #     swap=[]
@@ -90,8 +90,8 @@ class TofCam611(Node):
     #     # if abs(depth[0]-depth[1]) < 100:
     #     #     depth[0] = (depth[0] * num[0] + depth[1] * num[1])/(num[0]+num[1])
     #     #     depth[1] = 0
-        
-    #     return depth,swap            
+
+    #     return depth,swap
 
     # def insertionSort(self,nums):
     #     for i in range(1, len(nums)) :
@@ -100,12 +100,12 @@ class TofCam611(Node):
     #             nums[j+1] = nums[j]
     #             j -= 1
     #         nums[j+1] = fixed
-    #     return nums    
+    #     return nums
 
     # def swapLabel(self,label_array,swap):
     #     label_filtered_array = label_array.copy()
     #     label_filtered_array = label_array.reshape(56,1)
-            
+
     #     for i in range(len(label_filtered_array)):
     #         for j in range(len(swap)):
     #             if label_filtered_array[i] == j:
@@ -114,7 +114,7 @@ class TofCam611(Node):
 
     #     label_filtered_array=label_filtered_array.reshape(7,8)
     #     return label_filtered_array
-    
+
     # def checkWarning(self,swap,check):
     #     status = False
     #     if self.counter == 0:
@@ -122,7 +122,7 @@ class TofCam611(Node):
     #             # print("warning")
     #             self.counter +=1
     #             check.append(True)
-    
+
     #     elif self.counter ==1 or self.counter ==2 or self.counter ==3 :
     #         self.counter +=1
     #         if len(swap) > 1:
@@ -135,13 +135,13 @@ class TofCam611(Node):
     #         if len(check) >=3:
     #             status = True
     #             msg = String()
-    #             msg.data = 'Warning' 
+    #             msg.data = 'Warning'
     #             self.publisher_.publish(msg)
     #             self.get_logger().info('Publishing: "%s"' % msg.data)
-    #         check.clear()  
+    #         check.clear()
     #         self.counter = 0
     #         return status
-    
+
 
     def run(self):
 
@@ -159,10 +159,10 @@ class TofCam611(Node):
 
             # # reshape into
             # tof_distance_reshape = tof_distance.reshape(64,1)
-            
+
             # # kick out (16200) (too small)
             # tof_distance_reshape = tof_distance_reshape[tof_distance_reshape!=16200]
-                
+
             # # DBscan
             # tof_distance_reshape = self.planeDetection(tof_distance_reshape)
 
@@ -177,7 +177,7 @@ class TofCam611(Node):
             # warning = self.checkWarning(swap, check)
             # print (warning)
             # -----------------------------------------------------------
-            
+
 
 
 def main(args=None):
