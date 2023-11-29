@@ -25,19 +25,6 @@ class TofCam611(Node):
         self.tofCam.powerOn()
         self.tofCam.setIntTime_us(500)  # integration time in µSeconds
 
-    # def timer_callback(self):
-    #     msg = String()
-    #     msg.data = "Hello World: %d" % self.i
-    #     self.publisher_.publish(msg)
-    #     self.get_logger().info('Publishing: "%s"' % msg.data)
-    #     self.i += 1
-
-    # def filterArray(self, array):
-    #     #smooth by using gaussian filter
-    #     sigma = sigmaG
-    #     filtered_arr = gaussian_filter(array, sigma)
-    #     return filtered_arr
-
     def plane_detection(self, arr):
         """
         Function to perform DBSCAN clustering on the input array.
@@ -77,10 +64,12 @@ class TofCam611(Node):
             label_data = label_data.reshape(8, 8)
             planeNum = self.checkPlaneNum(label_data)
             if self.checkWarning(planeNum):
+                msg = String()
+                msg.data = "Warning: Edge detected."
+                self.publisher_.publish(msg)
+                self.get_logger().info('Publishing: "%s"' % msg.data)
                 print(original_data)
                 print(label_data)
-                # print("TOF distance image:")
-                # print(np.around(tof_distance, decimals=1))
 
 
 def main(args=None):
@@ -88,7 +77,6 @@ def main(args=None):
 
     publisher = TofCam611()
     publisher.run()
-    # rclpy.spin(publisher)
 
     publisher.destroy_node()
     rclpy.shutdown()
