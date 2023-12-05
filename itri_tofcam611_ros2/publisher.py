@@ -1,11 +1,13 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-import TOFcam611
+
+from . import TOFcam611_pack
+
+# import TOFcam611_pack
+
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
-import re
 
 # Port
 PORT = "/dev/ttyUSB0"
@@ -17,10 +19,10 @@ MIN_SAMPLE = 10
 class TofCam611(Node):
     def __init__(self):
         super().__init__("TofCam611")
-        self.publisher_ = self.create_publisher(String, "topic", 10)
+        self.publisher_ = self.create_publisher(String, "TofCam611_Warning", 10)
         # camera connection
-        self.com = TOFcam611.SerialInterface(PORT)
-        self.tofCam = TOFcam611.Camera(self.com)
+        self.com = TOFcam611_pack.SerialInterface(PORT)
+        self.tofCam = TOFcam611_pack.Camera(self.com)
         # set camera settings
         self.tofCam.powerOn()
         self.tofCam.setIntTime_us(500)  # integration time in µSeconds

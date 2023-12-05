@@ -1,4 +1,4 @@
-import TOFcam611
+import TOFcam611_pack
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
@@ -8,12 +8,14 @@ import re
 EPSILON = 400
 MIN_SAMPLE = 10
 
+
 def plane_detection(arr):
     """
     Function to perform DBSCAN clustering on the input array.
     """
     clustering = DBSCAN(eps=EPSILON, min_samples=MIN_SAMPLE).fit(arr)
     return clustering.labels_
+
 
 def checkPlaneNum(label_array):
     """
@@ -30,6 +32,7 @@ def checkPlaneNum(label_array):
 
     return counter
 
+
 def checkWarning(counter):
     if counter > 1:
         print("Warning: Edge detected.")
@@ -37,19 +40,21 @@ def checkWarning(counter):
     else:
         return False
 
+
 def main():
     tof_distance = np.load("data64px_tilt.npz")
     for k in tof_distance.files:
         key = int(re.search(r"\d+", k).group())
-        original_data = np.reshape(tof_distance[k], (8,8))
-        reshaped_data = original_data.reshape(64,1)
+        original_data = np.reshape(tof_distance[k], (8, 8))
+        reshaped_data = original_data.reshape(64, 1)
         label_data = plane_detection(reshaped_data)
-        label_data = label_data.reshape(8,8)
+        label_data = label_data.reshape(8, 8)
         planeNum = checkPlaneNum(label_data)
         if checkWarning(planeNum):
             print(key)
             print(original_data)
             print(label_data)
+
 
 if __name__ == "__main__":
     main()
