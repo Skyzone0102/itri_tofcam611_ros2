@@ -1,11 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
-
 from . import TOFcam611_pack
-
-# import TOFcam611_pack
-
 import numpy as np
 from sklearn.cluster import DBSCAN
 

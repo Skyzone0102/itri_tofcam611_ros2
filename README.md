@@ -22,6 +22,16 @@ restart
 
 Instructions on how to use the project, including examples and code snippets.
 
+```
+ros2 run itri_tofcam611_ros2 read
+```
+
+In a seperate terminal
+
+```
+ros2 topic echo /TofCam611_Warning
+```
+
 ## Contributing
 
 Guidelines for contributing to the project, including information on how to submit pull requests and report issues.
