@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from std_msgs.msg import Bool
 from . import TOFcam611_pack
 import numpy as np
 from sklearn.cluster import DBSCAN
@@ -9,13 +9,16 @@ from sklearn.cluster import DBSCAN
 PORT = "/dev/ttyUSB0"
 # DBSCAN Parameters
 EPSILON = 400
-MIN_SAMPLE = 10
+MIN_SAMPLE = 28
 
 
 class TofCam611(Node):
     def __init__(self):
         super().__init__("TofCam611")
-        self.publisher_ = self.create_publisher(String, "TofCam611_Warning", 10)
+        self.publisher_ = self.create_publisher(Bool, "TofCam611_Warning", 10)
+        self.timer_ = self.create_timer(0.0005, self.run)
+        self.msg = Bool()
+        self.msg.data = False
         # camera connection
         self.com = TOFcam611_pack.SerialInterface(PORT)
         self.tofCam = TOFcam611_pack.Camera(self.com)
@@ -28,6 +31,13 @@ class TofCam611(Node):
         Function to perform DBSCAN clustering on the input array.
         """
         clustering = DBSCAN(eps=EPSILON, min_samples=MIN_SAMPLE).fit(arr)
+        # filtering out
+        for i in range(len(arr)):
+            if arr[i] < 400:
+                clustering.labels_[i] = -1
+            if arr[i] > 160000:
+                clustering.labels_[i] = -1
+
         return clustering.labels_
 
     def checkPlaneNum(self, label_array):
@@ -39,9 +49,9 @@ class TofCam611(Node):
         for i in range(3):
             num.append(np.count_nonzero(label_array == i))
 
-        for i in range(len(num)):
-            if num[i] != 0:
-                counter += 1
+        if num[1] > 10:
+            num[1] = 0
+            counter = 2
 
         return counter
 
@@ -54,28 +64,30 @@ class TofCam611(Node):
 
     def run(self):
         # callback function
-        while True:
-            tof_distance = np.array(self.tofCam.getDistance())
-            original_data = np.reshape(tof_distance, (8, 8))
-            reshaped_data = original_data.reshape(64, 1)
-            label_data = self.plane_detection(reshaped_data)
-            label_data = label_data.reshape(8, 8)
-            planeNum = self.checkPlaneNum(label_data)
-            if self.checkWarning(planeNum):
-                msg = String()
-                msg.data = "Warning: Edge detected."
-                self.publisher_.publish(msg)
-                self.get_logger().info('Publishing: "%s"' % msg.data)
-                print(original_data)
-                print(label_data)
+
+        tof_distance = np.array(self.tofCam.getDistance())
+        original_data = np.reshape(tof_distance, (8, 8))
+        reshaped_data = original_data.reshape(64, 1)
+        label_data = self.plane_detection(reshaped_data)
+        label_data = label_data.reshape(8, 8)
+        planeNum = self.checkPlaneNum(label_data)
+        print(original_data)
+        print(label_data)
+        if self.checkWarning(planeNum):
+            self.msg.data = True
+            self.publisher_.publish(self.msg)
+            self.get_logger().info('Publishing: "%s"' % self.msg.data)
+
+        else:
+            self.publisher_.publish(self.msg)
+            self.get_logger().info('Publishing: "%s"' % self.msg.data)
 
 
 def main(args=None):
     rclpy.init(args=args)
 
     publisher = TofCam611()
-    publisher.run()
-
+    rclpy.spin(publisher)
     publisher.destroy_node()
     rclpy.shutdown()
 

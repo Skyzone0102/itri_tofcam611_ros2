@@ -1,45 +1,84 @@
-# Project Name
+# ITRI TOFcam611 fall detection
 
-Short description or introduction of the project.
+This project uses the TOFcam611 to implement fall detection, which prevents the Autonomous Mobile Robot (AMR) from falling off the dock when operating nearby. This ROS2 node publishes a boolean message indicating whether a warning condition is met based on data from a TOFcam611 camera. If the message is true, it means there are two or more planes detected, and the AMR should stop completely to avoid a fall.
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+- [Contace](#contact)
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- You have installed the latest version of [ROS2](https://index.ros.org/doc/ros2/Installation/).
+- You have a Linux machine. This project is not compatible with Windows or macOS.
+- You have installed the necessary Python packages. This project uses `scikit-learn` and `numpy`.
+- You have permission to access the serial port on your machine. If not, you can add your user to the `dialout` group using the command `sudo gpasswd --add ${USER} dialout` and then restart your machine.
 
 ## Installation
 
-If no permission for serial port
+Follow these steps to install and run the project:
 
-```
-sudo gpasswd --add ${USER} dialout
-restart
-```
+1. **Install ROS2**: Follow the instructions on the [official ROS2 website](https://index.ros.org/doc/ros2/Installation/) to install the latest version of ROS2.
+
+2. **Clone the Repository**: Clone this repository into your ROS2 workspace's `src` directory.
+
+   ```bash
+   cd ~/ros2_ws/src
+   git clone https://github.com/Skyzone0102/itri_tofcam611_ros2.git
+   ```
+
+3. **Install Python Dependencies**: Install the necessary Python packages using pip:
+
+   ```bash
+   pip install numpy scikit-learn
+   ```
+
+4. **Build the Package**: Navigate back to your ROS2 workspace directory and build the package:
+
+   ```bash
+   cd ~/ros2_ws
+   colcon build
+   ```
+
+5. **Source the Workspace**: Source your ROS2 workspace:
+
+   ```bash
+   source ~/ros2_ws/install/setup.bash
+   ```
+
+6. **Run the Node**: Run the `TofCam611` node:
+
+   ```bash
+   ros2 run itri_tofcam611_ros2 read
+   ```
 
 ## Usage
 
-Instructions on how to use the project, including examples and code snippets.
+This project is developed and tested on a Linux system using ROS2 Humble.
 
-```
-ros2 run itri_tofcam611_ros2 read
-```
+Follow these steps to run the program:
 
-In a seperate terminal
+1. **Run the Node**: Open a terminal, navigate to your ROS2 workspace, and run the `TofCam611` node:
 
-```
-ros2 topic echo /TofCam611_Warning
-```
+   ```bash
+   cd ~/ros2_ws
+   source install/setup.bash
+   ros2 run itri_tofcam611_ros2 read
+   ```
 
-## Contributing
+2. **Listen to the Published Topic**: In a separate terminal, you can listen to the `/TofCam611_Warning` topic to see the boolean messages published by the `TofCam611` node:
 
-Guidelines for contributing to the project, including information on how to submit pull requests and report issues.
+   ```bash
+   source /opt/ros/humble/setup.bash
+   ros2 topic echo /TofCam611_Warning
+   ```
 
-## License
-
-Information about the project's license and any additional terms or conditions.
+Remember to replace `~/ros2_ws` with the path to your actual ROS2 workspace, and `humble` with your actual ROS2 distribution if it's not Humble.
 
 ## Contact
 
-How to get in touch with the project maintainer or team.
+[GitHub Profile](https://github.com/Skyzone0102)
