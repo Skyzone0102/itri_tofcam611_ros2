@@ -67,7 +67,7 @@ This project uses the DBSCAN clustering algorithm, which has two key parameters:
 
 In addition to these, there is another parameter in `publisher.py`:
 
-- **Plane Count Threshold (Line 52)**: The number 10 in this line is a threshold that decides how many labeled planes are considered to be one plane. Adjusting this value changes the sensitivity of the plane detection.
+- **Plane Count Threshold (Line 54)**: The number 10 in this line is a threshold that decides how many labeled planes are considered to be one plane. Adjusting this value changes the sensitivity of the plane detection.
 
 ## Usage
 
@@ -95,4 +95,5 @@ Remember to replace `~/ros2_ws` with the path to your actual ROS2 workspace, and
 ## Contact
 
 **GitHub Profile**: https://github.com/Skyzone0102
+
 **Email**: michaelchou0102@gmail.com
