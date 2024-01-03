@@ -33,7 +33,7 @@ class TofCam611(Node):
         clustering = DBSCAN(eps=EPSILON, min_samples=MIN_SAMPLE).fit(arr)
         # filtering out
         for i in range(len(arr)):
-            if arr[i] < 400:
+            if arr[i] < 300:
                 clustering.labels_[i] = -1
             if arr[i] > 160000:
                 clustering.labels_[i] = -1

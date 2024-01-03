@@ -6,8 +6,9 @@ This project uses the TOFcam611 to implement fall detection, which prevents the 
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+- [Parameters](#parameters)
 - [Usage](#usage)
-- [Contace](#contact)
+- [Contact](#contact)
 
 ## Prerequisites
 
@@ -41,7 +42,7 @@ Follow these steps to install and run the project:
 
    ```bash
    cd ~/ros2_ws
-   colcon build
+   colcon build --packages-select itri_tofcam611_ros2
    ```
 
 5. **Source the Workspace**: Source your ROS2 workspace:
@@ -55,6 +56,18 @@ Follow these steps to install and run the project:
    ```bash
    ros2 run itri_tofcam611_ros2 read
    ```
+
+## Parameters
+
+This project uses the DBSCAN clustering algorithm, which has two key parameters:
+
+- **EPSILON**: This is the maximum distance between two samples for them to be considered as in the same neighborhood. Adjusting this value changes how broadly the algorithm searches for nearby samples.
+
+- **MIN_SAMPLE**: This is the number of samples in a neighborhood for a point to be considered as a core point. This includes the point itself. Adjusting this value changes how many samples are needed to form a dense region.
+
+In addition to these, there is another parameter in `publisher.py`:
+
+- **Plane Count Threshold (Line 52)**: The number 10 in this line is a threshold that decides how many labeled planes are considered to be one plane. Adjusting this value changes the sensitivity of the plane detection.
 
 ## Usage
 
@@ -81,4 +94,5 @@ Remember to replace `~/ros2_ws` with the path to your actual ROS2 workspace, and
 
 ## Contact
 
-[GitHub Profile](https://github.com/Skyzone0102)
+**GitHub Profile**: https://github.com/Skyzone0102
+**Email**: michaelchou0102@gmail.com
