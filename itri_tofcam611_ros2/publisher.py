@@ -49,9 +49,11 @@ class TofCam611(Node):
         for i in range(3):
             num.append(np.count_nonzero(label_array == i))
 
+        if num[0] > 10:
+            counter += 1
+
         if num[1] > 10:
-            num[1] = 0
-            counter = 2
+            counter += 1
 
         return counter
 
@@ -71,8 +73,8 @@ class TofCam611(Node):
         label_data = self.plane_detection(reshaped_data)
         label_data = label_data.reshape(8, 8)
         planeNum = self.checkPlaneNum(label_data)
-        print(original_data)
-        print(label_data)
+        # print(original_data)
+        # print(label_data)
         if self.checkWarning(planeNum):
             self.msg.data = True
             self.publisher_.publish(self.msg)
