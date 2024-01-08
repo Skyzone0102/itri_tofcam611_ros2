@@ -4,7 +4,7 @@
   <name>itri_tofcam611_ros2</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="michaelchou@gmail.com">michael</maintainer>
+  <maintainer email="michaelchou0102@gmail.com">michael</maintainer>
   <license>TODO: License declaration</license>
 
   <depend>[deps]</depend>
