@@ -49,11 +49,9 @@ class TofCam611(Node):
         for i in range(3):
             num.append(np.count_nonzero(label_array == i))
 
-        if num[0] > 10:
-            counter += 1
-
-        if num[1] > 10:
-            counter += 1
+        for i in range(3):
+            if num[i] > 10:
+                counter += 1
 
         return counter
 
